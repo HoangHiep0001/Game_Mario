@@ -63,9 +63,7 @@ CMario *mario;
 CBrick *brick;
 Map *map;
 
-int id_sprite = 1;
 
-int nsprite[9][11] ;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

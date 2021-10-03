@@ -40,6 +40,7 @@
 #include "SampleKeyEventHandler.h"
 
 #include "AssetIDs.h"
+#include "Map.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
@@ -47,18 +48,22 @@
 
 #define BACKGROUND_COLOR D3DXCOLOR(200.0f/255, 200.0f/255, 255.0f/255, 0.0f)
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 480
+#define SCREEN_HEIGHT 320
 
+#define ID_TEX_MAP -20
 
 #define TEXTURES_DIR L"textures"
 #define TEXTURE_PATH_MARIO TEXTURES_DIR "\\mario.png"
 #define TEXTURE_PATH_MISC TEXTURES_DIR "\\misc.png"
 #define TEXTURE_PATH_ENEMY TEXTURES_DIR "\\enemies.png"
 #define TEXTURE_PATH_BBOX TEXTURES_DIR "\\bbox.png"
+#define TEXTURE_PATH_MAP_1 TEXTURES_DIR "\\Map1.png"
+#define TEXTURE_PATH_SCENCE_MAP TEXTURES_DIR "\\Map1.txt"
 
 CGame *game;
 CMario *mario;
+Map* map;
 
 list<LPGAMEOBJECT> objects;
 
@@ -75,6 +80,11 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+void LoadMap()
+{
+	map = new Map(ID_TEX_MAP, TEXTURE_PATH_SCENCE_MAP, 41, 176, 11, 11);
 }
 
 void LoadAssetsMario()
@@ -360,12 +370,13 @@ void LoadAssetsOther()
 void LoadResources()
 {
 	CTextures* textures = CTextures::GetInstance();
-
+	textures->Add(ID_TEX_MAP, TEXTURE_PATH_MAP_1);
 	textures->Add(ID_TEX_MARIO, TEXTURE_PATH_MARIO);
 	textures->Add(ID_TEX_ENEMY, TEXTURE_PATH_ENEMY);
 	textures->Add(ID_TEX_MISC, TEXTURE_PATH_MISC);
-	textures->Add(ID_TEX_BBOX, TEXTURE_PATH_BBOX);
+	//textures->Add(ID_TEX_BBOX, TEXTURE_PATH_BBOX);
 
+	LoadMap();
 	LoadAssetsMario();
 	LoadAssetsGoomba();
 	LoadAssetsBrick();
@@ -543,7 +554,7 @@ void Render()
 	{
 		(*i)->Render();
 	}
-
+	map->Render();
 	spriteHandler->End();
 	pSwapChain->Present(0, 0);
 }
