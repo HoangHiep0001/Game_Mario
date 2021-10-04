@@ -88,9 +88,11 @@ public:
 
 	void SetPointSamplerState();
 
+
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 	void GetCamPos(float& x, float& y) { x = cam_x; y = cam_y; }
-
+	void SetCamPosY(float b) { cam_y = b; }
+	void SetCamPosX(float x) { cam_x = x; }
 	~CGame();
 };
 

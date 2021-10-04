@@ -15,8 +15,7 @@ using namespace std;
 
 class CGameObject
 {
-protected:
-
+public: 
 	float x; 
 	float y;
 
@@ -29,21 +28,21 @@ protected:
 
 	bool isDeleted; 
 
-public: 
+	CGameObject();
+	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
+
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
-
+	
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true;  }
 	bool IsDeleted() { return isDeleted; }
 
 	void RenderBoundingBox();
 
-	CGameObject();
-	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
-
+	
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};

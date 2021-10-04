@@ -101,10 +101,15 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
+
+#define MARIO_START_X 40
+#define MARIO_START_Y 100
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
 	float maxVx;
+	float x_mairo;
+	float y_mario;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
@@ -125,9 +130,10 @@ public:
 	{
 		isSitting = false;
 		maxVx = 0.0f;
+		x_mairo = x;
+		y_mario = y;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
-
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
@@ -137,7 +143,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-
+	float GetX() { return this->x_mairo ; }
+	float GetY() { return this->y_mario; }
 	int IsCollidable()
 	{ 
 		return (state != MARIO_STATE_DIE); 

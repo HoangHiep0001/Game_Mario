@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Sprites.h"
+#include "debug.h"
 
 #define SCREEN_HEIGHT 200
 #define TILE_SIZE 16
@@ -19,6 +20,12 @@ void Map::LoadMap()
 {
 	ifstream f;
 	f.open(MapData);
+	if (f.fail())
+	{
+		DebugOut(L"[ERROR] TileMap::Load_MapData failed: ID=%d", ID);
+		f.close();
+		return;
+	}
 	for (int i = 0; i < rowMap; i++)
 	{
 		for (int j = 0; j < columnMap; j++)

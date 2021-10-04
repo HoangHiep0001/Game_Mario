@@ -11,7 +11,8 @@ Map::Map(int ID, LPCWSTR File_data, int rowMap, int  columnMap, int rowTileSet, 
 	this->columnMap = columnMap;
 	this->rowTileSet = rowTileSet;
 	this->columnTileSet = columnTileSet;
-
+	this->screenWidth = CGame::GetInstance()->GetBackBufferWidth();
+	this->screenHeight = CGame::GetInstance()->GetBackBufferHeight();
 	LoadSpriteMap();
 	LoadMap();
 }
@@ -55,3 +56,18 @@ void Map::Render()
 	}
 }
 
+void Map::SetCamera(float x, float y)
+{
+	this->camera_x = x;
+	this->camera_y = y;
+}
+
+float Map::GetMapWidth()
+{
+	return columnMap * TILE_SIZE;
+}
+
+float Map::GetMapHeight()
+{
+	return rowMap * TILE_SIZE;
+}

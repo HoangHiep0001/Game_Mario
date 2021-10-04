@@ -42,6 +42,7 @@
 #include "AssetIDs.h"
 #include "Map.h"
 
+
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 #define WINDOW_ICON_PATH L"mario.ico"
@@ -57,6 +58,7 @@
 #define TEXTURE_PATH_MARIO TEXTURES_DIR "\\mario.png"
 #define TEXTURE_PATH_MISC TEXTURES_DIR "\\misc.png"
 #define TEXTURE_PATH_ENEMY TEXTURES_DIR "\\enemies.png"
+
 #define TEXTURE_PATH_BBOX TEXTURES_DIR "\\bbox.png"
 #define TEXTURE_PATH_MAP_1 TEXTURES_DIR "\\Map1.png"
 #define TEXTURE_PATH_SCENCE_MAP TEXTURES_DIR "\\Map1.txt"
@@ -65,6 +67,8 @@ CGame *game;
 CMario *mario;
 Map* map;
 
+RECT mapCamera;
+RECT cameras;
 list<LPGAMEOBJECT> objects;
 
 CSampleKeyHandler * keyHandler; 
@@ -382,6 +386,7 @@ void LoadResources()
 	LoadAssetsBrick();
 	LoadAssetsCoin();
 	LoadAssetsOther();
+	
 }
 
 void ClearScene()
@@ -394,8 +399,7 @@ void ClearScene()
 	objects.clear();
 }
 
-#define MARIO_START_X 20.0f
-#define MARIO_START_Y 10.0f
+
 
 #define BRICK_X 0.0f
 #define GOOMBA_X 200.0f
@@ -460,6 +464,7 @@ void Reload()
 	objects.push_back(p);
 
 	mario = new CMario(MARIO_START_X, MARIO_START_Y);
+
 	objects.push_back(mario);
 
 	for (int j = 0; j < 1; j++)
@@ -517,17 +522,58 @@ void Update(DWORD dt)
 
 	PurgeDeletedObjects();
 
+
 	// Update camera to follow mario
+//	float cx, cy;
+//	mario->GetPosition(cx, cy);
+//
+//	cx -= SCREEN_WIDTH / 2;
+//	cy = 0;
+//	//cy -= SCREEN_HEIGHT / 2;
+//
+//	if (cx < 0) cx = 0;
+//
+//	CGame::GetInstance()->SetCamPos(cx, cy);
+	
 	float cx, cy;
+	float x_mario, y_mario;
 	mario->GetPosition(cx, cy);
+	mario->GetPosition(x_mario, y_mario);
 
-	cx -= SCREEN_WIDTH / 2;
-	cy = 0;
-	//cy -= SCREEN_HEIGHT / 2;
+	CGame* game = CGame::GetInstance();
+	cx -= (float)game->GetBackBufferWidth() / 2;
+	cy -= (float)game->GetBackBufferHeight() / 2;
 
-	if (cx < 0) cx = 0;
+	float x_cam;	//0	0
+	float y_cam;
+	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
 
-	CGame::GetInstance()->SetCamPos(cx, cy);
+	//khoa cam x
+	if (cx < mapCamera.left)
+	{
+		cx = mapCamera.left;
+	}
+	else if (cx > mapCamera.right - game->GetBackBufferWidth())
+	{
+		cx = mapCamera.right - game->GetBackBufferHeight();
+	}
+
+	//khoa cam y
+	if ((y_mario > cameras.top + (game->GetBackBufferHeight() * 1 / 4)))
+	{
+		CGame::GetInstance()->SetCamPos(cx, cameras.top/*cy*/);
+	}
+	else if (y_cam <= mapCamera.top)
+	{
+		CGame::GetInstance()->SetCamPos(cx, y_cam/*cy*/);
+	}
+	else
+	{
+		CGame::GetInstance()->SetCamPos(cx, cy/*cy*/);
+	}
+	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
+	map->SetCamera(x_cam, y_cam);
+
 }
 
 /*
@@ -548,13 +594,13 @@ void Render()
 
 	FLOAT NewBlendFactor[4] = { 0,0,0,0 };
 	pD3DDevice->OMSetBlendState(g->GetAlphaBlending(), NewBlendFactor, 0xffffffff);
-
+	map->Render();
 	list<LPGAMEOBJECT>::iterator i;
 	for (i = objects.begin(); i != objects.end(); ++i)
 	{
 		(*i)->Render();
 	}
-	map->Render();
+	
 	spriteHandler->End();
 	pSwapChain->Present(0, 0);
 }
