@@ -5,6 +5,8 @@ brick.txt
 coin.txt
 goomba.txt
 cloud.txt
+[TILE_MAP_DATA]
+scene\Map1.1\Map1.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
