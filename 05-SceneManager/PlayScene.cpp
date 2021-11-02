@@ -32,6 +32,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define ASSETS_SECTION_ANIMATIONS 2
 #define SCENE_SECTION_TILEMAP 3
 
+#define OBJECT_TYPE_CAMERA	60
+#define OBJECT_TYPE_MAP_CAMERA 61
+
 #define MAX_SCENE_LINE 1024
 
 void CPlayScene::_ParseSection_SPRITES(string line)
@@ -101,8 +104,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	int object_type = atoi(tokens[0].c_str());
 	float x = (float)atof(tokens[1].c_str());
-	float y = (float)atof(tokens[2].c_str());
 
+
+	float y = (float)atof(tokens[2].c_str());
+	int colum = 0;
+	int row = 0;
 	CGameObject *obj = NULL;
 
 	switch (object_type)
@@ -122,6 +128,34 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 
+	case OBJECT_TYPE_CAMERA:
+	{
+		RECT cam;
+		int id = atoi(tokens[3].c_str());
+		float w = atof(tokens[4].c_str());
+		float h = atof(tokens[5].c_str());
+		
+		cam.left = x;
+		cam.top = y;
+		cam.right = x + w;
+		cam.bottom = y + h;
+		Cameras[id] = cam;
+
+		break;
+	}
+	case OBJECT_TYPE_MAP_CAMERA:
+	{
+		int id = atoi(tokens[3].c_str());
+		float w = atof(tokens[4].c_str());
+		float h = atof(tokens[5].c_str());
+
+		mapCamera.left = x;
+		mapCamera.top = y;
+		mapCamera.right = x + w;
+		mapCamera.bottom = y + h;
+		mapCameras[id] = mapCamera;
+		break;
+	}
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -157,10 +191,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
+	if (object_type != OBJECT_TYPE_CAMERA && object_type != OBJECT_TYPE_MAP_CAMERA)
+	{
+		obj->SetPosition(x, y);
+		objects.push_back(obj);
+	}
 
-
-	objects.push_back(obj);
 }
 
 void CPlayScene::_ParseSection_TILEMAP_DATA(string line)
@@ -290,15 +326,48 @@ void CPlayScene::Update(DWORD dt)
 
 	// Update camera to follow mario
 	float cx, cy;
+	float x_mario, y_mario;
 	player->GetPosition(cx, cy);
+	player->GetPosition(x_mario, y_mario);
 
-	CGame *game = CGame::GetInstance();
+	CGame* game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 
-	if (cx < 0) cx = 0;
+	if (cy < mapCamera.top)
+	{
+		cy = mapCamera.top;
+	}
+	float x_cam;	//0	0
+	float y_cam;
+	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	
+
+	if (cx < 0) cx = 0;
+	if (cx < mapCamera.left)
+	{
+		cx = mapCamera.left;
+	}
+	if (cx > mapCamera.right - CGame::GetInstance()->GetBackBufferHeight())
+	{
+		cx = mapCamera.right - CGame::GetInstance()->GetBackBufferWidth();
+	}
+
+	//khoa cam y
+	if ((y_mario > camera.top))
+	{
+		CGame::GetInstance()->SetCamPos(cx, camera.top/*cy*/);
+	}
+	else if (y_cam <= mapCamera.top)
+	{
+		CGame::GetInstance()->SetCamPos(cx, mapCamera.top/*cy*/);
+	}
+	else
+	{
+		CGame::GetInstance()->SetCamPos(cx, cy/*cy*/);
+	}
+	
 
 	PurgeDeletedObjects();
 }

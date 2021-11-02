@@ -16,6 +16,10 @@ protected:
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
 	Map* tileMap;
+	RECT camera;
+	RECT mapCamera;
+	unordered_map<int, RECT> mapCameras;
+	unordered_map<int, RECT> Cameras;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_SPRITES(string line);
