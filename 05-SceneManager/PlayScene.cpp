@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
+#include "Ground.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -32,8 +33,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define ASSETS_SECTION_ANIMATIONS 2
 #define SCENE_SECTION_TILEMAP 3
 
-#define OBJECT_TYPE_CAMERA	60
-#define OBJECT_TYPE_MAP_CAMERA 61
 
 #define MAX_SCENE_LINE 1024
 
@@ -130,16 +129,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_CAMERA:
 	{
-		RECT cam;
 		int id = atoi(tokens[3].c_str());
 		float w = atof(tokens[4].c_str());
 		float h = atof(tokens[5].c_str());
 		
-		cam.left = x;
-		cam.top = y;
-		cam.right = x + w;
-		cam.bottom = y + h;
-		Cameras[id] = cam;
+		camera.left = x;
+		camera.top = y;
+		camera.right = x + w;
+		camera.bottom = y + h;
+		Cameras[id] = camera;
 
 		break;
 	}
@@ -148,12 +146,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int id = atoi(tokens[3].c_str());
 		float w = atof(tokens[4].c_str());
 		float h = atof(tokens[5].c_str());
-
 		mapCamera.left = x;
 		mapCamera.top = y;
 		mapCamera.right = x + w;
 		mapCamera.bottom = y + h;
 		mapCameras[id] = mapCamera;
+		break;
+	}
+	case OBJECT_TYPE_GROUND:
+	{
+		float w = atof(tokens[3].c_str());
+		float h = atof(tokens[4].c_str());
+		int state = atof(tokens[5].c_str());
+		obj = new Ground(x, y, w, h, state);
+		obj->SetIsAlwaysUpdate(true);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM:
@@ -367,8 +373,8 @@ void CPlayScene::Update(DWORD dt)
 	{
 		CGame::GetInstance()->SetCamPos(cx, cy/*cy*/);
 	}
-	
-
+	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
+	tileMap->SetCamera(x_cam, y_cam);
 	PurgeDeletedObjects();
 }
 

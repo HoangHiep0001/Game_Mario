@@ -20,6 +20,7 @@ protected:
 	RECT mapCamera;
 	unordered_map<int, RECT> mapCameras;
 	unordered_map<int, RECT> Cameras;
+	unordered_map<int, int> isSpecialCamera;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_SPRITES(string line);
@@ -39,7 +40,16 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
-
+	RECT GetCamera() { return this->camera; }
+	void SetMapCamera(RECT map) { this->mapCamera = map; }
+	void SetCamera(RECT cam) { this->camera = cam; }
+	unordered_map<int, RECT> GetListMapCamera() {
+		return this->mapCameras;
+	}
+	unordered_map<int, int> GetSpecialCamera() { return this->isSpecialCamera; }
+	unordered_map<int, RECT> GetListCamera() {
+		return this->Cameras;
+	}
 	void Clear();
 	void PurgeDeletedObjects();
 

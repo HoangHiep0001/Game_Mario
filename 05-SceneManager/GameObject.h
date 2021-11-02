@@ -24,11 +24,14 @@ protected:
 	float vx;
 	float vy;
 
+	float dx;	// dx = vx*dt
+	float dy;	// dy = vy*dt
 	int nx;	 
 
 	int state;
 
 	bool isDeleted; 
+	bool isAlwaysUpdate = false;
 
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
@@ -45,6 +48,9 @@ public:
 	CGameObject();
 	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
 
+
+	void SetIsAlwaysUpdate(bool x) { this->isAlwaysUpdate = x; }
+	bool GetIsAlwaysUpdate() { return this->isAlwaysUpdate; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};
