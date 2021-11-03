@@ -123,7 +123,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
+	case OBJECT_TYPE_GOOMBA:
+	{
+		int app = atoi(tokens[3].c_str());
+		int state = atoi(tokens[4].c_str());
+		obj = new CGoomba(x,y,app);
+		CGoomba* q = dynamic_cast<CGoomba*>(obj);
+		q->SetState(state);
+	}
+	break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 
@@ -157,8 +165,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float w = atof(tokens[3].c_str());
 		float h = atof(tokens[4].c_str());
-		int state = atof(tokens[5].c_str());
-		obj = new Ground(x, y, w, h, state);
+		int length = atoi(tokens[5].c_str());
+		int state = atof(tokens[6].c_str());
+		obj = new Ground(x, y, w, h, length, state);
 		obj->SetIsAlwaysUpdate(true);
 		break;
 	}

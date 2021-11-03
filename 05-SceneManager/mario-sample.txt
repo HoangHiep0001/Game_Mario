@@ -16,6 +16,7 @@ height	0
 -100	textures\bbox.png
 #0	textures\mario.png
 0	textures\mario1.png
+30	textures\enemies-3.png
 10	textures\enemies.png
 20	textures\misc.png
 -20	scene\Map1.1\SuperMarioBros3Map1-1.1BG_bank.png

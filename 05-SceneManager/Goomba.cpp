@@ -1,7 +1,8 @@
 #include "Goomba.h"
 
-CGoomba::CGoomba(float x, float y):CGameObject(x, y)
+CGoomba::CGoomba(float x, float y, int app):CGameObject(x, y)
 {
+	this->apperance = app;
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
@@ -10,20 +11,34 @@ CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == GOOMBA_STATE_DIE)
+	left = x;
+	top = y;
+	switch (state)
 	{
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT_DIE/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT_DIE;
+	case GOOMBA_STATE_WALKING:
+		right = x + GOOMBA_BBOX_X_Y;
+		bottom = y + GOOMBA_BBOX_X_Y;
+		break;
+	case GOOMBA_STATE_FLYLING:
+		right = x + GOOMBA_BBOX_WING;
+		bottom = y + GOOMBA_BBOX_FLYING_Y;
+		break;
+	case GOOMBA_STATE_WALKING_WING:
+		right = x + GOOMBA_BBOX_WING;
+		bottom = y + GOOMBA_BBOX_FLYING_Y;
+		break;
+	case GOOMBA_STATE_DIE:
+		right = x + 0;
+		bottom = y + 0;
+		break;
+	case GOOMBA_STATE_WALKING_DOWN:
+	case GOOMBA_STATE_FLYLING_DOWN:
+	case GOOMBA_STATE_WALKING_WING_DOWN:
+		right = x + 0;
+		bottom = y + 0;
+		break;
 	}
-	else
-	{ 
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT;
-	}
+
 }
 
 void CGoomba::OnNoCollision(DWORD dt)
@@ -65,13 +80,62 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CGoomba::Render()
 {
-	int aniId = ID_ANI_GOOMBA_WALKING;
-	if (state == GOOMBA_STATE_DIE) 
+	int ani = -1;
+	if (apperance == GOOMBA_RED)
 	{
-		aniId = ID_ANI_GOOMBA_DIE;
+		switch (state)
+		{
+		case GOOMBA_STATE_WALKING:
+			ani = GOOMBA_ANI_RED_WALKING;
+			break;
+		case GOOMBA_STATE_FLYLING:
+			ani = GOOMBA_ANI_RED_FLYLING;
+			break;
+		case GOOMBA_STATE_WALKING_WING:
+			ani = GOOMBA_ANI_RED_WALKING_WING;
+			break;
+		case GOOMBA_STATE_DIE:
+			ani = GOOMBA_ANI_RED_DIE;
+			break;
+		case GOOMBA_STATE_WALKING_DOWN:
+			ani = GOOMBA_ANI_RED_WALKING_DOWN;
+			break;
+		case GOOMBA_STATE_FLYLING_DOWN:
+			ani = GOOMBA_ANI_RED_FLYLING_DOWN;
+			break;
+		case GOOMBA_STATE_WALKING_WING_DOWN:
+			ani = GOOMBA_ANI_RED_WALKING_WING_DOWN;
+			break;
+		}
 	}
-
-	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
+	else if (apperance == GOOMBA_THERE)
+	{
+		switch (state)
+		{
+		case GOOMBA_STATE_WALKING:
+			ani = GOOMBA_ANI_THERE_WALKING;
+			break;
+		case GOOMBA_STATE_FLYLING:
+			ani = GOOMBA_ANI_THERE_FLYLING;
+			break;
+		case GOOMBA_STATE_WALKING_WING:
+			ani = GOOMBA_ANI_THERE_WALKING_WING;
+			break;
+		case GOOMBA_STATE_DIE:
+			ani = GOOMBA_ANI_THERE_DIE;
+			break;
+		case GOOMBA_STATE_WALKING_DOWN:
+			ani = GOOMBA_ANI_THERE_WALKING_DOWN;
+			break;
+		case GOOMBA_STATE_FLYLING_DOWN:
+			ani = GOOMBA_ANI_THERE_FLYLING_DOWN;
+			break;
+		case GOOMBA_STATE_WALKING_WING_DOWN:
+			ani = GOOMBA_ANI_THERE_WALKING_WING_DOWN;
+			break;
+		}
+	}
+	CAnimations::GetInstance()->Get(ani)->Render(x,y);
 	RenderBoundingBox();
 }
 
@@ -80,15 +144,51 @@ void CGoomba::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-		case GOOMBA_STATE_DIE:
-			die_start = GetTickCount64();
-			y += (GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE)/2;
-			vx = 0;
-			vy = 0;
-			ay = 0; 
-			break;
-		case GOOMBA_STATE_WALKING: 
+
+	case GOOMBA_STATE_DIE:
+		die_start = GetTickCount64();
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
+	case GOOMBA_STATE_WALKING:
+		if (nx > 0)
+		{
+			vx = GOOMBA_WALKING_SPEED;
+		}
+		else
+		{
 			vx = -GOOMBA_WALKING_SPEED;
-			break;
+		}
+		break;
+	case GOOMBA_STATE_FLYLING:
+		if (nx > 0)
+		{
+			vx = GOOMBA_WALKING_SPEED;
+		}
+		else
+		{
+			vx = -GOOMBA_WALKING_SPEED;
+		}
+		vy = -GOOMBA_JUMP_FLY_SPEED_Y;
+		break;
+	case GOOMBA_STATE_WALKING_WING:
+		if (nx > 0)
+		{
+			vx = GOOMBA_WALKING_SPEED;
+		}
+		else
+		{
+			vx = -GOOMBA_WALKING_SPEED;
+		}
+		vy = -GOOMBA_JUMP_SPEED_Y;
+		break;
+	case GOOMBA_STATE_WALKING_DOWN:
+	case GOOMBA_STATE_FLYLING_DOWN:
+	case GOOMBA_STATE_WALKING_WING_DOWN:
+		vx = 0;
+		vy = -GOOMBA_JUMP_SPEED_Y;
+		break;
 	}
+	
 }
