@@ -144,7 +144,6 @@ void CGoomba::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-
 	case GOOMBA_STATE_DIE:
 		die_start = GetTickCount64();
 		vx = 0;

@@ -106,39 +106,58 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithGround(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<Ground*>(e->obj))
+	Ground* ground = dynamic_cast<Ground*>(e->obj);
+	if (e->ny < 0)
 	{
+		if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 1)
+		{
+			y += dy;
+		}
 		
-		if (e->ny > 0)
-		{
-			if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 1)
-			{
-				y += dy;
-			}
-			if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 0)
-			{
-				x += dx;
-				y += dy;
-			}
-		}
-		else
-		{
-			vy = 0;
-		}
-		if (e->nx != 0)
-		{
-			if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 0)
-			{
-				vx = 0;
-				ax = 0;
-			}
-			else
-			{
-				x += dx;
-			}
-		}
+	}
+	else
+	{
+		vy = 0;
 
 	}
+	if (e->nx != 0)
+	{
+		if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 1)
+		{
+			x += dx;
+		}
+		else if (dynamic_cast<Ground*>(e->obj)->GetGroundState() == 0)
+		{
+			vx = 0;
+
+		}
+	}
+
+	/*vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPGAMEOBJECT>* coObjects;	//cai nay lay tren ham update
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	bool flagOnGround = false;
+	for (std::size_t i = 0; i < coObjects->size(); i++)
+	{
+		LPGAMEOBJECT e = coObjects->at(i);
+		if (dynamic_cast<Ground*>(e) && !flagOnGround)
+		{
+			Ground* f = dynamic_cast<Ground*> (e);
+
+			float l, t, r, b, el, et, er, eb;
+			this->GetBoundingBox(l, t, r, b);
+			b = b;
+			f->GetBoundingBox(el, et, er, eb);
+			if (CGameObject::AABB(l, t, r, b, el, et, er, eb))
+			{
+				if (b > et && state != MARIO_STATE_JUMP && state != MARIO_STATE_FLYLING)
+				{
+
+					flagOnGround = true;
+				}
+			}
+		}
+	}*/
 }
 
 //
@@ -406,16 +425,16 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		}
 		else 
 		{
-			left = x - MARIO_BIG_BBOX_WIDTH/2;
-			top = y - MARIO_BIG_BBOX_HEIGHT/2;
+			left = x - MARIO_BIG_BBOX_WIDTH/5;
+			top = y - MARIO_BIG_BBOX_HEIGHT/5;
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}
 	else
 	{
-		left = x - MARIO_SMALL_BBOX_WIDTH/2;
-		top = y - MARIO_SMALL_BBOX_HEIGHT/2;
+		left = x ;
+		top = y ;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
 	}

@@ -129,6 +129,9 @@
     <ClCompile Include="Ground.cpp">
       <Filter>Header Files\Object\Ground</Filter>
     </ClCompile>
+    <ClCompile Include="Koopas.cpp">
+      <Filter>Header Files\Object\Goomba</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Platform.h">
@@ -206,6 +209,9 @@
     <ClInclude Include="Ground.h">
       <Filter>Header Files\Object\Ground</Filter>
     </ClInclude>
+    <ClInclude Include="Koopas.h">
+      <Filter>Header Files\Object\Goomba</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="scene01.txt">
@@ -224,6 +230,9 @@
       <Filter>Scene Text</Filter>
     </Text>
     <Text Include="mario-sample.txt">
+      <Filter>Scene Text</Filter>
+    </Text>
+    <Text Include="koopas.txt">
       <Filter>Scene Text</Filter>
     </Text>
   </ItemGroup>

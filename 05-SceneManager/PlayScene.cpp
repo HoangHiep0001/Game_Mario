@@ -10,7 +10,7 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Ground.h"
-
+#include "Koopas.h"
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -106,6 +106,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 
 	float y = (float)atof(tokens[2].c_str());
+
 	int colum = 0;
 	int row = 0;
 	CGameObject *obj = NULL;
@@ -130,11 +131,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGoomba(x,y,app);
 		CGoomba* q = dynamic_cast<CGoomba*>(obj);
 		q->SetState(state);
+		break;
+
 	}
-	break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-
+	case OBJECT_TYPE_KOOPAS:
+	{
+		int app = atoi(tokens[3].c_str());
+		int state = atoi(tokens[4].c_str());
+		obj = new CKoopas(x, y, app);
+		CKoopas* q = dynamic_cast<CKoopas*>(obj);
+		q->SetState(state);
+		break;
+	}
 	case OBJECT_TYPE_CAMERA:
 	{
 		int id = atoi(tokens[3].c_str());
@@ -392,7 +402,6 @@ void CPlayScene::Render()
 	tileMap->Render();
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-
 }
 
 /*

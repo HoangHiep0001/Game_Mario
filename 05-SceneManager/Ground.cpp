@@ -10,10 +10,9 @@ void Ground::Render()
 
 void Ground::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	int a = (x + width * this->length/2) ;
-	int c = (y + height / 2);
-	l = a - this->width / 2* this->length;
-	t = c - this->height/2;
+	//cai nay bo di, tinh cho da khac gi l = x 
+	l = x; 
+	t = y;
 	r = l + this->width * this->length;
 	b = t + this->height;
 }
@@ -37,6 +36,6 @@ void Ground::RenderBoundingBox()
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
 	float xx = x - this->width / 2 + rect.right / 2;
-
-	CGame::GetInstance()->Draw(xx - cx, y - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
+	float yy = y + height / 2 - 8;
+	CGame::GetInstance()->Draw(xx - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right , rect.bottom );
 }

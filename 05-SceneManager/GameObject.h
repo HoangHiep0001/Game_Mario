@@ -12,7 +12,7 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
-#define BBOX_ALPHA 0.25f		// Bounding box transparency
+#define BBOX_ALPHA 0.5f		// Bounding box transparency
 
 class CGameObject
 {
@@ -71,6 +71,7 @@ public:
 	// Is this object blocking other object? If YES, collision framework will automatically push the other object
 	virtual int IsBlocking() { return 1; }
 
+	bool AABB(float l, float t, float r, float b, float l1, float t1, float r1, float b1);
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }
