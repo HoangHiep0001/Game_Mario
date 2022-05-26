@@ -28,20 +28,6 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 
 #include "debug.h"
 #include "Game.h"
-#include "GameObject.h"
-#include "Textures.h"
-#include "Animation.h"
-#include "Animations.h"
-
-#include "Mario.h"
-#include "Brick.h"
-#include "Goomba.h"
-#include "Coin.h"
-#include "Platform.h"
-
-#include "SampleKeyEventHandler.h"
-
-#include "AssetIDs.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
@@ -49,8 +35,11 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 
 #define BACKGROUND_COLOR D3DXCOLOR(200.0f/255, 200.0f/255, 255.0f/255, 0.0f)
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define GAME_SCREEN_WIDTH	271
+#define GAME_SCREEN_HEIGHT	264
+
+#define WINDOW_SCREEN_WIDTH		690
+#define WINDOW_SCREEN_HEIGHT	672
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -192,7 +181,7 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow
 ) {
-	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
+	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 
 	SetDebugWindow(hWnd);
 
@@ -202,9 +191,9 @@ int WINAPI WinMain(
 
 
 	//IMPORTANT: this is the only place where a hardcoded file name is allowed ! 
-	game->Load(L"mario-sample.txt");  
+	game->Load(L"data\\mario-sample.txt");  
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
 

@@ -1,28 +1,20 @@
 #pragma once
+
 #include "GameObject.h"
 
-/*
-	Object that triggers scene switching
-*/
-class Ground : public CGameObject
-{
-	int State;
-	int width;
-	int height;
-	int length;
+#define CELL_WIDTH  16
+#define CELL_HEIGHT 16
+
+class CGround : public CGameObject {
 public:
-	Ground(float x, float y,
-		float cell_width, float cell_height, int length, int state) :CGameObject(x, y)
-	{
-		this->State = state;
-		this->length = length;
-		this->width = cell_width;
-		this->height = cell_height;
+	int width, height;
+
+	CGround(float x, float y, Type type, int row_cell_num, int column_cell_num) : CGameObject(x, y, type) {
+		width = row_cell_num * CELL_WIDTH;
+		height = column_cell_num * CELL_HEIGHT;
 	}
 	void Render();
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void RenderBoundingBox();
-	int GetGroundState() { return this->State; }
 };
 

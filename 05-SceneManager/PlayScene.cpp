@@ -10,7 +10,11 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Ground.h"
-#include "Koopas.h"
+#include "PandoraBrick.h"
+#include "Pipe.h"
+#include "Koopa.h"
+#include "Goomba.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -26,15 +30,15 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_UNKNOWN -1
 #define SCENE_SECTION_ASSETS	1
 #define SCENE_SECTION_OBJECTS	2
-
+#define SCENE_SECTION_TILEMAP 7
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
 #define ASSETS_SECTION_ANIMATIONS 2
-#define SCENE_SECTION_TILEMAP 3
-
 
 #define MAX_SCENE_LINE 1024
+
+#define CAM_START_Y	238.0f
 
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
@@ -101,87 +105,69 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// skip invalid lines - an object set must have at least id, x, y
 	if (tokens.size() < 2) return;
 
-	int object_type = atoi(tokens[0].c_str());
+	Type object_type = static_cast<Type>(atoi(tokens[0].c_str()));
 	float x = (float)atof(tokens[1].c_str());
-
-
 	float y = (float)atof(tokens[2].c_str());
 
-	int colum = 0;
-	int row = 0;
 	CGameObject *obj = NULL;
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
+	case Type::MARIO:
 		if (player!=NULL) 
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
+		/*obj = new CMario(x, y); 
+		player = (CMario*)obj;  */
+		obj = CMario::GetInstance();
+		player = (CMario*)obj;
+		player->SetPosition(x, y);
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA:
-	{
-		int app = atoi(tokens[3].c_str());
-		int state = atoi(tokens[4].c_str());
-		obj = new CGoomba(x,y,app);
-		CGoomba* q = dynamic_cast<CGoomba*>(obj);
-		q->SetState(state);
-		break;
+	case Type::YELLOW_GOOMBA:
+	case Type::RED_PARAGOOMBA:
+		obj = new CGoomba(x, y, object_type); break;
 
-	}
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-	case OBJECT_TYPE_KOOPAS:
+	case Type::RED_KOOPA:
+	case Type::GREEN_KOOPA:
+	case Type::GREEN_PARAKOOPA:
+		obj = new CKoopa(x, y, object_type); break;
+
+	//case Type::COIN: obj = new CCoin(x, y); break;
+
+	case Type::PANDORA_BRICK:
 	{
-		int app = atoi(tokens[3].c_str());
-		int state = atoi(tokens[4].c_str());
-		obj = new CKoopas(x, y, app);
-		CKoopas* q = dynamic_cast<CKoopas*>(obj);
-		q->SetState(state);
-		break;
-	}
-	case OBJECT_TYPE_CAMERA:
-	{
-		int id = atoi(tokens[3].c_str());
-		float w = atof(tokens[4].c_str());
-		float h = atof(tokens[5].c_str());
-		
-		camera.left = x;
-		camera.top = y;
-		camera.right = x + w;
-		camera.bottom = y + h;
-		Cameras[id] = camera;
+		float brickType = (float)atof(tokens[3].c_str());
+		float itemType = (float)atof(tokens[4].c_str());
+
+		obj = new CPandoraBrick(x, y, object_type, brickType, itemType);
 
 		break;
 	}
-	case OBJECT_TYPE_MAP_CAMERA:
+
+	case Type::PIPE:
 	{
-		int id = atoi(tokens[3].c_str());
-		float w = atof(tokens[4].c_str());
-		float h = atof(tokens[5].c_str());
-		mapCamera.left = x;
-		mapCamera.top = y;
-		mapCamera.right = x + w;
-		mapCamera.bottom = y + h;
-		mapCameras[id] = mapCamera;
+		float pipeType = (float)atof(tokens[3].c_str());
+		obj = new CPipe(x, y, object_type, pipeType);
+
 		break;
 	}
-	case OBJECT_TYPE_GROUND:
+
+	case Type::COLOR_BOX:
+	case Type::GROUND:
 	{
-		float w = atof(tokens[3].c_str());
-		float h = atof(tokens[4].c_str());
-		int length = atoi(tokens[5].c_str());
-		int state = atof(tokens[6].c_str());
-		obj = new Ground(x, y, w, h, length, state);
-		obj->SetIsAlwaysUpdate(true);
+		float row_cell_num = (float)atof(tokens[3].c_str());
+		float column_cell_num = (float)atof(tokens[4].c_str());
+
+		obj = new CGround(x, y, object_type, row_cell_num, column_cell_num);
+
 		break;
 	}
-	case OBJECT_TYPE_PLATFORM:
+
+	/*case Type::PLATFORM:
 	{
 
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -198,9 +184,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		);
 
 		break;
-	}
+	}*/
 
-	case OBJECT_TYPE_PORTAL:
+	case Type::PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
@@ -216,43 +202,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (object_type != OBJECT_TYPE_CAMERA && object_type != OBJECT_TYPE_MAP_CAMERA)
-	{
-		obj->SetPosition(x, y);
-		objects.push_back(obj);
-	}
+	//obj->SetType(object_type);
 
+	objects.push_back(obj);
 }
 
-void CPlayScene::_ParseSection_TILEMAP_DATA(string line)
+void CPlayScene::_ParseSection_TILEMAP(string line)
 {
-	LPCWSTR path = ToLPCWSTR(line);
-	ifstream f;
+	vector<string> tokens = split(line);
 
-	f.open(path);
+	if (tokens.size() < 7) return;
 
-	int ID;
-	int rowMap, columnMap, columnTile, rowTile, totalTiles;
-	f >> ID >> rowMap >> columnMap >> rowTile >> columnTile >> totalTiles;
+	int ID = atoi(tokens[0].c_str());
+	wstring tileset_file_path = ToWSTR(tokens[1]);
+	wstring map_file_path = ToWSTR(tokens[2]);
+	int num_of_tileset_rows = atoi(tokens[3].c_str());
+	int num_of_tileset_cols = atoi(tokens[4].c_str());
+	int num_of_map_rows = atoi(tokens[5].c_str());
+	int num_of_map_cols = atoi(tokens[6].c_str());
 
-	
-	//khoi tao ma tran data
-	std::vector<std::vector<int>> tileMapData;
-	tileMapData.resize(rowMap);
-	for (int i = 0; i < rowMap; i++)
-		tileMapData[i].resize(columnMap);
-	for (int i = 0; i < rowMap; i++)
-	{
-		for (int j = 0; j < columnMap; j++)
-		{
-			f >> tileMapData[i][j];
-		}
-	}
-	f.close();
-
-	tileMap = new Map(ID, rowMap, columnMap, rowTile, columnTile, totalTiles);
-	tileMap->ExtractTileFromTileSet();
-	tileMap->SetTileMapData(tileMapData);
+	map = new TileMap(ID, tileset_file_path.c_str(), map_file_path.c_str(), num_of_tileset_rows, num_of_tileset_cols, num_of_map_rows, num_of_map_cols);
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -308,10 +277,7 @@ void CPlayScene::Load()
 		if (line[0] == '#') continue;	// skip comment lines	
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
-		if (line == "[TILE_MAP_DATA]")
-		{
-			section = SCENE_SECTION_TILEMAP; continue;
-		}
+		if (line == "[TILEMAP]") { section = SCENE_SECTION_TILEMAP; continue; }
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
 
 		//
@@ -321,7 +287,7 @@ void CPlayScene::Load()
 		{ 
 			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-			case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP_DATA(line); break;
+			case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
 		}
 	}
 
@@ -351,55 +317,24 @@ void CPlayScene::Update(DWORD dt)
 
 	// Update camera to follow mario
 	float cx, cy;
-	float x_mario, y_mario;
 	player->GetPosition(cx, cy);
-	player->GetPosition(x_mario, y_mario);
 
-	CGame* game = CGame::GetInstance();
+	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 
-	if (cy < mapCamera.top)
-	{
-		cy = mapCamera.top;
-	}
-	float x_cam;	//0	0
-	float y_cam;
-	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
-
-	
-
 	if (cx < 0) cx = 0;
-	if (cx < mapCamera.left)
-	{
-		cx = mapCamera.left;
-	}
-	if (cx > mapCamera.right - CGame::GetInstance()->GetBackBufferHeight())
-	{
-		cx = mapCamera.right - CGame::GetInstance()->GetBackBufferWidth();
-	}
+	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
 
-	//khoa cam y
-	if ((y_mario > camera.top))
-	{
-		CGame::GetInstance()->SetCamPos(cx, camera.top/*cy*/);
-	}
-	else if (y_cam <= mapCamera.top)
-	{
-		CGame::GetInstance()->SetCamPos(cx, mapCamera.top/*cy*/);
-	}
-	else
-	{
-		CGame::GetInstance()->SetCamPos(cx, cy/*cy*/);
-	}
-	CGame::GetInstance()->GetCamPos(x_cam, y_cam);
-	tileMap->SetCamera(x_cam, y_cam);
+	CGame::GetInstance()->SetCamPos(cx, CAM_START_Y /*cy*/);
+
 	PurgeDeletedObjects();
 }
 
 void CPlayScene::Render()
 {
-	tileMap->Render();
+	map->Render();
+
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 }

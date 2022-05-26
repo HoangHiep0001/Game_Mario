@@ -3,7 +3,7 @@
 
 #include "debug.h"
 
-#define BLOCK_PUSH_FACTOR 0.4f
+#define BLOCK_PUSH_FACTOR 0.1f
 
 CCollision* CCollision::__instance = NULL;
 
@@ -196,7 +196,7 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 		if (c->obj->IsDeleted()) continue; 
 
 		// ignore collision event with object having IsBlocking = 0 (like coin, mushroom, etc)
-		if (filterBlock == 1 && !c->obj->IsBlocking()) 
+		if (filterBlock == 1 && (!c->obj->IsBlocking() || ((c->ny > 0 || c->nx != 0) && c->obj->GetType() == Type::COLOR_BOX))) 
 		{
 			continue;
 		}

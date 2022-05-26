@@ -1,0 +1,15 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+40001	157	188	173	204	20
+40002	176	188	192	204	20
+40003	196	188	212	204	20
+40004	215	188	231	204	20
+
+# normal
+40005	235	188	251	204	20
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+602	40001	100	40002	100	40003	100	40004	100
+603	40005	100

@@ -1,0 +1,50 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#==============NORMAL GOOMBA==============
+# move
+30001	32	9	48	27	10
+30002	9	9	27	27	10
+# die by crush
+30003	54	11	70	27	10
+# die by attack
+30004	218	62	236	78	10
+
+#==============RED PARAGOOMBA=============
+# flap wing up
+3001	66	35	86	59	10
+3002	90	35	110	59	10
+# flap wing down
+3003	116	35	136	59	10
+3004	140	35	160	59	10
+# normal walk
+3005	102	62	120	86	10
+3006	123	62	141	86	10
+# die by crush
+3007	142	66	162	86	10
+# die by attack
+3008	197	94	215	110	10
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ====== NORMAL GOOMBA ======
+# move
+702	30001	100	30002	100
+# die by crush
+703	30003	100
+# die by attack
+704	30004	100
+
+# ====== RED PARAGOOMBA ======
+# walk (has wings)
+705	3003	100	3004	100
+# flap wings quickly (when fly high)
+706	3003	55	3001	55	3003	55	3001	55	3004	55	3002	55	3004	55	3002	65
+# flap wings slowly (when fall and jump)
+707	3003	85	3001	85	3004	85	3002	85
+# normal walk (lose wings)
+708	3005	100	3006	100
+# die by crush
+709	3007	100
+# die by attack
+750	3008	100

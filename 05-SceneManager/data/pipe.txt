@@ -1,0 +1,30 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# pipe 32
+2001	201	415	233	447	21
+# pipe 48
+2002	5	28	37	76	21
+# pipe 64
+2003	433	301	465	365	21
+# pipe 208 stripe
+2004	472	157	504	365	21
+# pipe 32 hidden
+2005	433	223	465	255	21
+# pipe 48 stripe
+2006	433	157	465	205	21
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# pipe 32
+400	2001	100
+# pipe 48
+401	2002	100
+# pipe 64
+402	2003	100
+# pipe 208 stripe
+403	2004	100
+# pipe 32 hidden
+399	2005	100
+# pipe 48 stripe
+398	2006	100

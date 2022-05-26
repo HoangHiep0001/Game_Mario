@@ -1,54 +1,79 @@
 #pragma once
 #include "GameObject.h"
+#include "Timer.h"
 
-#define GOOMBA_GRAVITY 0.002f
-#define GOOMBA_WALKING_SPEED 0.05f
-#define GOOMBA_JUMP_FLY_SPEED_Y	0.3f
-#define GOOMBA_JUMP_SPEED_Y	0.25f
+#define GOOMBA_WALKING_SPEED 0.035f
+#define GOOMBA_GRAVITY 0.0006f
+#define GOOMBA_DIE_DEFLECT_SPEED_Y 0.22f
+#define PARAGOOMBA_HIGH_FLYING_GRAVITY 0.0004f
 
-#define GOOMBA_BBOX_WING 20
-#define GOOMBA_BBOX_FLYING_Y 24
-#define GOOMBA_BBOX_X_Y 16
-#define GOOMBA_BBOX_Y 7
+#define PARAGOOMBA_LOW_FLYING_SPEED_Y 0.07f
+#define PARAGOOMBA_HIGH_FLYING_SPEED_Y 0.18f
 
-// state
-#define GOOMBA_STATE_WALKING 0
-#define GOOMBA_STATE_FLYLING 1
-#define GOOMBA_STATE_WALKING_WING 2
-#define GOOMBA_STATE_DIE 3
-#define GOOMBA_STATE_WALKING_DOWN 4
-#define GOOMBA_STATE_FLYLING_DOWN 5
-#define GOOMBA_STATE_WALKING_WING_DOWN 6
-// ani
-#define GOOMBA_ANI_RED_WALKING 5050
-#define GOOMBA_ANI_RED_FLYLING 5051
-#define GOOMBA_ANI_RED_WALKING_WING 5052
-#define GOOMBA_ANI_RED_DIE 5053
-#define GOOMBA_ANI_RED_WALKING_DOWN 5054
-#define GOOMBA_ANI_RED_FLYLING_DOWN 5055
-#define GOOMBA_ANI_RED_WALKING_WING_DOWN 5056
-
-#define GOOMBA_ANI_THERE_WALKING 5000
-#define GOOMBA_ANI_THERE_FLYLING 5001
-#define GOOMBA_ANI_THERE_WALKING_WING 5002
-#define GOOMBA_ANI_THERE_DIE 5003
-#define GOOMBA_ANI_THERE_WALKING_DOWN 5004
-#define GOOMBA_ANI_THERE_FLYLING_DOWN 5005
-#define GOOMBA_ANI_THERE_WALKING_WING_DOWN 5006
+#define GOOMBA_DIE_TIMEOUT 250
+#define PARAGOOMBA_WALK_TIME 800
+#define PARAGOOMBA_REDIRECTION_DELAY 300
+#define PARAGOOMBA_CHASING_TIME 15000
 
 
-// APP
-#define GOOMBA_RED 0
-#define GOOMBA_THERE 1
+#pragma region GOOMBA_STATE
 
-#define GOOMBA_DIE_TIMEOUT 500
+#define GOOMBA_STATE_WALKING 100
+#define GOOMBA_STATE_DIE_BY_CRUSH 200
+#define GOOMBA_STATE_DIE_BY_ATTACK 201
+
+#define PARAGOOMBA_STATE_FLY_LOW 298
+#define PARAGOOMBA_STATE_FLY_HIGH 297
+#define PARAGOOMBA_STATE_NORMAL 296
+
+#pragma endregion
+
+#pragma region GOOMBA_BBOX_SIZE
+
+#define GOOMBA_BBOX_WIDTH 16
+#define GOOMBA_BBOX_HEIGHT 15
+#define GOOMBA_DIE_BBOX_HEIGHT 8
+
+#define PARAGOOMBA_BBOX_WIDTH 20
+#define PARAGOOMBA_BBOX_HEIGHT 15
+
+#define GOOMBA_DIE_OFFSET_LEFT 7
+#define GOOMBA_DIE_OFFSET_TOP 1
+#define GOOMBA_WALKING_OFFSET_TOP 8
+#define PARAGOOMBA_DIE_OFFSET_TOP 5
+
+#pragma endregion
+
+#pragma region GOOMBA_ANIMATION_ID
+
+#define ID_ANI_GOOMBA_WALKING		702
+#define ID_ANI_GOOMBA_DIE_BY_CRUSH	703
+#define ID_ANI_GOOMBA_DIE_BY_ATTACK	704
+
+#define ID_ANI_PARAGOOMBA_WINGS_WALKING 705
+#define ID_ANI_PARAGOOMBA_NORMAL_WALKING 708
+#define ID_ANI_PARAGOOMBA_FLAP_WINGS_QUICKLY 706
+#define ID_ANI_PARAGOOMBA_FLAP_WINGS_SLOWLY	707
+#define ID_ANI_PARAGOOMBA_DIE_BY_CRUSH 709
+#define ID_ANI_PARAGOOMBA_DIE_BY_ATTACK 750
+
+#pragma endregion
+
 class CGoomba : public CGameObject
 {
 protected:
 	float ax;				
 	float ay; 
-	int apperance;
-	ULONGLONG die_start;
+
+	int lowFlyingCounter;
+	bool lostWings;
+
+	CTimer* dieTime = new CTimer(GOOMBA_DIE_TIMEOUT);
+	CTimer* walkTime = new CTimer(PARAGOOMBA_WALK_TIME);
+	CTimer* redirectionDelay = new CTimer(PARAGOOMBA_REDIRECTION_DELAY);
+	CTimer* chasingTime = new CTimer(PARAGOOMBA_CHASING_TIME);
+
+	float GetSpeedX();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
@@ -61,7 +86,8 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public: 	
-	CGoomba(float x, float y,int app);
+	CGoomba(float x, float y, Type type);
 	virtual void SetState(int state);
-	int GetApperance() { return apperance; }
+
+	bool HasWings() { return !lostWings; }
 };
