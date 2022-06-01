@@ -58,14 +58,14 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	/*if (!e->obj->IsBlocking()) return; 
-	if (dynamic_cast<CGoomba*>(e->obj)) return; */
+	if (!e->obj->IsBlocking()) return; 
+	if (dynamic_cast<CGoomba*>(e->obj)) return; 
 
 	if (e->ny != 0 )
 	{
 		vy = 0;
 
-		//if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
+		if (lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
 			SetState(PARAGOOMBA_STATE_FLY_LOW);
@@ -98,12 +98,15 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
-	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH > x)
+	if (state == -1)
 	{
-		SetState(GOOMBA_STATE_WALKING);
-
-		if (type == Type::RED_PARAGOOMBA)
+		if (type == Type::RED_PARAGOOMBA && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x)
+		{
+			SetState(GOOMBA_STATE_WALKING);
 			chasingTime->Start();
+		}
+	else if (type == Type::YELLOW_GOOMBA)
+		SetState(GOOMBA_STATE_WALKING);
 	}
 
 	if (type == Type::RED_PARAGOOMBA && state == GOOMBA_STATE_WALKING && redirectionDelay->IsTimeUp() && !lostWings && !chasingTime->IsTimeUp())
@@ -118,7 +121,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		walkTime->Stop();
 	}
 
-	//CGameObject::Update(dt, coObjects);
+	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 

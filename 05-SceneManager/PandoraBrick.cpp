@@ -21,7 +21,7 @@ void CPandoraBrick::Render()
 			animations->Get(ID_ANI_BRONZE_BRICK)->Render(x, y);
 	}
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

@@ -33,6 +33,7 @@ protected:
 public:
 	CMushroom(float x, float y, Type type) : CGameObject(x, y, type) {
 		ay = 0;
+		ay = 0;
 		vy = -MUSHROOM_BOUNCE_SPEED;
 		highestPos = y - MUSHROOM_BBOX_HEIGHT;
 	}

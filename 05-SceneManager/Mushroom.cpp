@@ -38,7 +38,7 @@ void CMushroom::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(ID_ANI_SUPER_MUSHROOM)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)

@@ -204,6 +204,23 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\brick.txt" />
+    <Text Include="data\bronze_brick.txt" />
+    <Text Include="data\cloud.txt" />
+    <Text Include="data\coin.txt" />
+    <Text Include="data\goomba.txt" />
+    <Text Include="data\items.txt" />
+    <Text Include="data\koopa.txt" />
+    <Text Include="data\map1.txt" />
+    <Text Include="data\mario-sample.txt" />
+    <Text Include="data\mario.txt" />
+    <Text Include="data\pandora_brick.txt" />
+    <Text Include="data\pipe.txt" />
+    <Text Include="data\scene0005.txt" />
+    <Text Include="data\scene01.txt" />
+    <Text Include="data\scene02.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets" Condition="Exists('..\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\Microsoft.DXSDK.D3DX.targets')" />

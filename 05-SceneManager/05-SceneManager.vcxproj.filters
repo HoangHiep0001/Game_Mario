@@ -192,4 +192,51 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\brick.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\bronze_brick.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\cloud.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\coin.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\goomba.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\items.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\koopa.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\map1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\mario.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\mario-sample.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\pandora_brick.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\pipe.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\scene01.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\scene02.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\scene0005.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
