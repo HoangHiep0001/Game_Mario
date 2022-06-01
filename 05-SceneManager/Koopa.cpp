@@ -3,6 +3,9 @@
 #include "DetectionBox.h"
 #include "Goomba.h"
 #include "PandoraBrick.h"
+#include "Mario.h"
+
+#define GAME_SCREEN_WIDTH 320
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -26,10 +29,25 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	for (int i = 0; i < subItems.size(); i++)
-	{
-		subItems[i]->Update(dt, coObjects);
+	if (isBeingHeld) {
+		SetPositionFollowPlayer();
 	}
+
+	if (shellTime->IsTimeUp()) {
+		SetState(KOOPA_STATE_VIBRATE);
+	}
+
+	if (vibrationTime->IsTimeUp()) {
+		SetState(KOOPA_STATE_WALKING);
+	}
+
+	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH > x)
+		SetState(KOOPA_STATE_WALKING);
+
+	if (type == Type::RED_KOOPA)
+		for (int i = 0; i < subItems.size(); i++)
+			subItems[i]->Update(dt, coObjects);
+
 
 	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -37,28 +55,23 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopa::Render()
 {
-	int aniId = ID_ANI_KOOPA_WALKING_LEFT;
+	int aniId = -1;
 
-	if (state == KOOPA_STATE_SHELL)
-		aniId = ID_ANI_KOOPA_SHELL_PRONE;
-	else if (state == KOOPA_STATE_SHELL_MOVING)
-		aniId = ID_ANI_KOOPA_SHELL_MOVING_PRONE;
+	if (type == Type::RED_KOOPA)
+	{
+		aniId = GetAniRed();
+	}
 	else
 	{
-		if (nx > 0)
-			aniId = ID_ANI_KOOPA_WALKING_RIGHT;
-		else
-			aniId = ID_ANI_KOOPA_WALKING_LEFT;
+		aniId = GetAniGreen();
 	}
-
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 
-	for (int i = 0; i < subItems.size(); i++)
-	{
-		subItems[i]->Render();
-	}
+	if (type == Type::RED_KOOPA)
+		for (int i = 0; i < subItems.size(); i++)
+			subItems[i]->Render();
 }
 
 void CKoopa::OnNoCollision(DWORD dt)
@@ -73,7 +86,10 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (e->ny != 0)
 	{
-		vy = 0;
+		if (e->ny < 0 && type == Type::GREEN_PARAKOOPA)
+			vy = -PARAKOOPA_DEFLECT_SPEED_Y;
+		else
+			vy = 0;
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
@@ -106,9 +122,11 @@ void CKoopa::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 
 CKoopa::CKoopa(float x, float y, Type type) : CGameObject(x, y, type)
 {
+	isBeingHeld = false;
+	isSupine = false;
 	ax = 0.0f;
 	ay = KOOPA_GRAVITY;
-	SetState(KOOPA_STATE_WALKING);
+	//SetState(KOOPA_STATE_WALKING);
 	CDetectionBox* detectionBox = new CDetectionBox(this);
 	subItems.push_back(detectionBox);
 }
@@ -120,16 +138,34 @@ void CKoopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_WALKING:
+		isBeingHeld = false;
+		vibrationTime->Stop();
 		vx = -KOOPA_WALKING_SPEED;
 		nx = -1;
 		break;
 
 	case KOOPA_STATE_SHELL:
+		shellTime->Start();
 		vx = 0;
 		break;
 
 	case KOOPA_STATE_SHELL_MOVING:
+		shellTime->Stop();
+		vibrationTime->Stop();
 		vx = KOOPA_SHELL_MOVING_SPEED * nx;
+		break;
+
+	case KOOPA_STATE_BEING_HELD:
+		isBeingHeld = true;
+		break;
+
+	case KOOPA_STATE_VIBRATE:
+		shellTime->Stop();
+		vibrationTime->Start();
+		break;
+
+	case PARAKOOPA_STATE_NORMAL:
+		SetType(Type::GREEN_KOOPA);
 		break;
 	}
 }
@@ -141,4 +177,102 @@ void CKoopa::ChangeDirection()
 		vx = -vx;
 		nx = -nx;
 	}
+}
+
+void CKoopa::SetPositionFollowPlayer()
+{
+	float px, py; // x and y of player
+	CMario::GetInstance()->GetPosition(px, py);
+
+	if (CMario::GetInstance()->GetNx() > 0) {
+		x = px + 10;
+		y = py + 3;
+	}
+	else
+	{
+		x = px - 10;
+		y = py + 3;
+	}
+}
+
+int CKoopa::GetAniRed()
+{
+	int aniId = ID_ANI_RED_KOOPA_WALKING_LEFT;
+
+	if (state == KOOPA_STATE_SHELL)
+	{
+		if (isSupine)
+			aniId = ID_ANI_RED_KOOPA_SHELL_SUPINE;
+		else
+			aniId = ID_ANI_RED_KOOPA_SHELL_PRONE;
+	}
+	else if (state == KOOPA_STATE_SHELL_MOVING)
+	{
+		if (isSupine)
+			aniId = ID_ANI_RED_KOOPA_SHELL_MOVING_SUPINE;
+		else
+			aniId = ID_ANI_RED_KOOPA_SHELL_MOVING_PRONE;
+	}
+	else if (state == KOOPA_STATE_VIBRATE)
+	{
+		if (isSupine)
+			aniId = ID_ANI_RED_KOOPA_VIBRATE_SUPINE;
+		else
+			aniId = ID_ANI_RED_KOOPA_VIBRATE_PRONE;
+	}
+	else
+	{
+		if (nx > 0)
+			aniId = ID_ANI_RED_KOOPA_WALKING_RIGHT;
+		else
+			aniId = ID_ANI_RED_KOOPA_WALKING_LEFT;
+	}
+
+	return aniId;
+}
+
+int CKoopa::GetAniGreen()
+{
+	int aniId = ID_ANI_GREEN_KOOPA_WALKING_LEFT;
+
+	if (state == KOOPA_STATE_SHELL)
+	{
+		if (isSupine)
+			aniId = ID_ANI_GREEN_KOOPA_SHELL_SUPINE;
+		else
+			aniId = ID_ANI_GREEN_KOOPA_SHELL_PRONE;
+	}
+	else if (state == KOOPA_STATE_SHELL_MOVING)
+	{
+		if (isSupine)
+			aniId = ID_ANI_GREEN_KOOPA_SHELL_MOVING_SUPINE;
+		else
+			aniId = ID_ANI_GREEN_KOOPA_SHELL_MOVING_PRONE;
+	}
+	else if (state == KOOPA_STATE_VIBRATE)
+	{
+		if (isSupine)
+			aniId = ID_ANI_GREEN_KOOPA_VIBRATE_SUPINE;
+		else
+			aniId = ID_ANI_GREEN_KOOPA_VIBRATE_PRONE;
+	}
+	else
+	{
+		if (type == Type::GREEN_PARAKOOPA)
+		{
+			if (nx > 0)
+				aniId = ID_ANI_GREEN_PARAKOOPA_WALKING_RIGHT;
+			else
+				aniId = ID_ANI_GREEN_PARAKOOPA_WALKING_LEFT;
+		}
+		else
+		{
+			if (nx > 0)
+				aniId = ID_ANI_GREEN_KOOPA_WALKING_RIGHT;
+			else
+				aniId = ID_ANI_GREEN_KOOPA_WALKING_LEFT;
+		}
+	}
+
+	return aniId;
 }

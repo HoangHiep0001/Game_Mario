@@ -25,7 +25,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	dax = 0.00025f * dt;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
@@ -40,6 +39,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		kickShell->Stop();
 
 	isOnPlatform = false;
+
+	dax = MARIO_DECEL_X * dt;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -136,7 +137,16 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (koopa->GetState() == KOOPA_STATE_WALKING || koopa->GetState() == KOOPA_STATE_SHELL_MOVING)
+		if (koopa->GetState() == KOOPA_STATE_WALKING)
+		{
+			if (koopa->GetType() == Type::GREEN_PARAKOOPA)
+				koopa->SetType(Type::GREEN_KOOPA);
+			else
+				koopa->SetState(KOOPA_STATE_SHELL);
+
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (koopa->GetState() == KOOPA_STATE_SHELL_MOVING)
 		{
 			koopa->SetState(KOOPA_STATE_SHELL);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -224,7 +234,12 @@ int CMario::GetAniIdSmall()
 				aniId = ID_ANI_MARIO_SIT_LEFT;
 		}
 		else
-			if (vx == 0)
+			if (!(kickShell->IsTimeUp() || kickShell->IsStopped()))
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_KICK_RIGHT;
+				else aniId = ID_ANI_MARIO_SMALL_KICK_LEFT;
+			}
+			else if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
 				else aniId = ID_ANI_MARIO_SMALL_IDLE_LEFT;
