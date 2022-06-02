@@ -41,6 +41,8 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define	MARIO_STATE_ATTACK			700
+
 #pragma endregion
 
 #pragma region MARIO_ANIMATION_ID
@@ -150,10 +152,10 @@
 #define ID_ANI_MARIO_RACCOON_FLY_HOLD_SHELL_LEFT 235
 
 #define ID_ANI_MARIO_RACCOON_FLYING_UP_RIGHT 209
-#define ID_ANI_MARIO_RACCOON_FLYING_UP_LEFT 229
+#define ID_ANI_MARIO_RACCOON_FLYING_UP_LEFT 230
 
 #define ID_ANI_MARIO_RACCOON_FLYING_DOWN_RIGHT 210
-#define ID_ANI_MARIO_RACCOON_FLYING_DOWN_LEFT 230
+#define ID_ANI_MARIO_RACCOON_FLYING_DOWN_LEFT 229
 
 #define ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_RIGHT 208
 #define ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_LEFT 228
@@ -225,14 +227,12 @@
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 18
 
-#define MARIO_RACCOON_IDLE_OFFSET_LEFT_R 3
-#define MARIO_RACCOON_IDLE_OFFSET_LEFT_L 4
+#define MARIO_RACCOON_IDLE_OFFSET_LEFT_L 2
 #define MARIO_RACCOON_IDLE_OFFSET_TOP 14
 #define MARIO_RACCOON_BBOX_WIDTH 14
 #define MARIO_RACCOON_BBOX_HEIGHT 28
 
-#define MARIO_SMALL_IDLE_OFFSET_LEFT_R 4
-#define MARIO_SMALL_IDLE_OFFSET_LEFT_L 3
+#define MARIO_SMALL_IDLE_OFFSET_LEFT 1
 #define MARIO_SMALL_IDLE_OFFSET_TOP 2
 
 #define MARIO_SMALL_BBOX_WIDTH  14
@@ -242,12 +242,15 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_KICK_SHELL_TIME 200
+#define MARIO_SPIN_TAIL_TIME 250
 
 class CMario : public CGameObject
 {
 	static CMario* __instance;
 
 	BOOLEAN isSitting;
+	BOOLEAN isOnPowerMode;
 	float maxVx;
 	float dax;
 	float ax;				// acceleration on x 
@@ -258,7 +261,8 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 
-	CTimer* kickShell = new CTimer(200);
+	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
+	CTimer* spinTail = new CTimer(4500);
 
 	int coin; 
 
@@ -279,6 +283,7 @@ public:
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
 		isSitting = false;
+		isOnPowerMode = false;
 		isOnPlatform = false;
 		maxVx = 0.0f;
 		dax = 0.0f;

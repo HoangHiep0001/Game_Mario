@@ -38,6 +38,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (kickShell->IsTimeUp()) 
 		kickShell->Stop();
 
+	if (spinTail->IsTimeUp())
+		spinTail->Stop();
+
 	isOnPlatform = false;
 
 	dax = MARIO_DECEL_X * dt;
@@ -314,7 +317,17 @@ int CMario::GetAniIdRaccoon()
 				aniId = ID_ANI_MARIO_RACCOON_SIT_LEFT;
 		}
 		else
-			if (vx == 0)
+			if (!(kickShell->IsTimeUp() || kickShell->IsStopped()))
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_KICK_LEFT;
+			}
+			else if (!(spinTail->IsTimeUp() || spinTail->IsStopped()))
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_SPIN_TAIL_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_SPIN_TAIL_LEFT;
+			}
+			else if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
 				else aniId = ID_ANI_MARIO_RACCOON_IDLE_LEFT;
@@ -519,7 +532,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
 }
@@ -600,6 +613,11 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		break;
+
+	case MARIO_STATE_ATTACK:
+		if (spinTail->IsStopped())
+			spinTail->Start();
+		break;
 	}
 
 	CGameObject::SetState(state);
@@ -630,7 +648,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	else if (level == MARIO_LEVEL_RACCOON)
 	{
 		if (nx > 0)
-			left = x - MARIO_RACCOON_IDLE_OFFSET_LEFT_R;
+			left = x ;
 		else
 			left = x - MARIO_RACCOON_IDLE_OFFSET_LEFT_L;
 
@@ -650,9 +668,9 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	else if (level == MARIO_LEVEL_SMALL)
 	{
 		if (nx > 0)
-			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT_R;
+			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT;
 		else
-			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT_L;
+			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT;
 		top = y - MARIO_SMALL_IDLE_OFFSET_TOP;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;

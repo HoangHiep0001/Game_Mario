@@ -164,9 +164,6 @@ void CKoopa::SetState(int state)
 		vibrationTime->Start();
 		break;
 
-	case PARAKOOPA_STATE_NORMAL:
-		SetType(Type::GREEN_KOOPA);
-		break;
 	}
 }
 
