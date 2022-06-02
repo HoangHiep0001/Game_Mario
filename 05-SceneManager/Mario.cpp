@@ -402,7 +402,12 @@ int CMario::GetAniIdFire()
 				aniId = ID_ANI_MARIO_FIRE_SIT_LEFT;
 		}
 		else
-			if (vx == 0)
+			if (!(kickShell->IsTimeUp() || kickShell->IsStopped()))
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_FIRE_KICK_RIGHT;
+				else aniId = ID_ANI_MARIO_FIRE_KICK_LEFT;
+			}
+			else if (vx == 0)
 			{
 				if (nx > 0) aniId = ID_ANI_MARIO_FIRE_IDLE_RIGHT;
 				else aniId = ID_ANI_MARIO_FIRE_IDLE_LEFT;
@@ -628,7 +633,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	if (level == MARIO_LEVEL_BIG || level == MARIO_LEVEL_FIRE)
 	{
 		if (nx > 0)
-			left = x - MARIO_BIG_IDLE_OFFSET_LEFT_R;
+			left = x ;
 		else
 			left = x - MARIO_BIG_IDLE_OFFSET_LEFT_L;
 
