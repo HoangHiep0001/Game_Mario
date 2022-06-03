@@ -25,8 +25,7 @@ protected:
 
 	float vx;
 	float vy;
-
-	int nx;	 
+ 
 
 	int state;
 
@@ -35,6 +34,8 @@ protected:
 	Type type;
 
 public: 
+	int nx;
+
 	void SetType(Type type) { this->type = type; }
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }

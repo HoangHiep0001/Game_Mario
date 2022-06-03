@@ -132,7 +132,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::RED_KOOPA:
 	case Type::GREEN_KOOPA:
 	case Type::GREEN_PARAKOOPA:
-		obj = new CKoopa(x, y, object_type); break;
+		obj = new CKoopa(x, y, object_type, (CMario*)player); break;
 
 	//case Type::COIN: obj = new CCoin(x, y); break;
 

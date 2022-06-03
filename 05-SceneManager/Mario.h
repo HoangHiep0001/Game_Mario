@@ -10,6 +10,8 @@
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
+#define MARIO_MAX_RUNNING_SPEED	0.25f
+
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.0007f
 
@@ -266,12 +268,11 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 
-	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
-	CTimer* spinTail = new CTimer(4500);
 
 	int coin; 
 
 	BOOLEAN isOnPlatform;
+	
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
@@ -285,8 +286,13 @@ class CMario : public CGameObject
 	int GetAniIdFire();
 
 public:
+	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
+	CTimer* spinTail = new CTimer(4500);
+	BOOLEAN isHoldingShell;
+
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
+		isHoldingShell = false;
 		isSitting = false;
 		isOnPowerMode = false;
 		isOnPlatform = false;

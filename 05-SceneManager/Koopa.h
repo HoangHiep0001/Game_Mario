@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
+#include "Mario.h"
 
 #define KOOPA_GRAVITY 0.0006f
 #define KOOPA_WALKING_SPEED 0.035f
@@ -68,6 +69,8 @@ protected:
 	bool isBeingHeld;
 	bool isSupine;
 
+	CMario* player;
+
 	CTimer* shellTime = new CTimer(KOOPA_SHELL_TIME);
 	CTimer* vibrationTime = new CTimer(KOOPA_VIBRATION_TIME);
 
@@ -86,7 +89,7 @@ protected:
 	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
 
 public:
-	CKoopa(float x, float y, Type type);
+	CKoopa(float x, float y, Type type, CMario* player);
 	virtual void SetState(int state);
 
 	virtual void ChangeDirection();

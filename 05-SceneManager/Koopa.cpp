@@ -26,8 +26,16 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
+	if (isBeingHeld)
+	{
+		vx = 0;
+		vy = 0;
+	}
+	else
+	{
+		vy += ay * dt;
+		vx += ax * dt;
+	}
 
 	if (isBeingHeld) {
 		SetPositionFollowPlayer();
@@ -43,6 +51,20 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH > x)
 		SetState(KOOPA_STATE_WALKING);
+
+	if (isBeingHeld && !player->isHoldingShell)
+	{
+		if (player->nx > 0)
+		{
+			x += 6;
+		}
+		else
+			x -= 6;
+		player->kickShell->Start();
+		SetNx(player->nx);
+		SetState(KOOPA_STATE_SHELL_MOVING);
+	}
+
 
 	if (type == Type::RED_KOOPA)
 		for (int i = 0; i < subItems.size(); i++)
@@ -120,8 +142,9 @@ void CKoopa::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
 }
 
-CKoopa::CKoopa(float x, float y, Type type) : CGameObject(x, y, type)
+CKoopa::CKoopa(float x, float y, Type type, CMario* player) : CGameObject(x, y, type)
 {
+	this->player = player;
 	isBeingHeld = false;
 	isSupine = false;
 	ax = 0.0f;
@@ -150,6 +173,7 @@ void CKoopa::SetState(int state)
 		break;
 
 	case KOOPA_STATE_SHELL_MOVING:
+		isBeingHeld = false;
 		shellTime->Stop();
 		vibrationTime->Stop();
 		vx = KOOPA_SHELL_MOVING_SPEED * nx;
