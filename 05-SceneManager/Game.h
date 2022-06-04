@@ -17,7 +17,8 @@ using namespace std;
 #define KEYBOARD_BUFFER_SIZE 1024
 #define KEYBOARD_STATE_SIZE 256
 
-
+#define GAME_SCREEN_WIDTH	271
+#define GAME_SCREEN_HEIGHT	264
 
 /*
 	Our simple game framework
@@ -107,6 +108,7 @@ public:
 	void GetCamPos(float& x, float& y) { x = cam_x; y = cam_y; }
 
 	float GetCamPosX() { return cam_x; }
+	float GetCamPosY() { return cam_y; }
 
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	void Load(LPCWSTR gameFile);

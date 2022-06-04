@@ -96,6 +96,12 @@
     <ClCompile Include="DetectionBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tail.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BrokenPiece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -191,6 +197,12 @@
     <ClInclude Include="DetectionBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Tail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BrokenPiece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\brick.txt">
@@ -236,6 +248,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="data\scene0005.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\magic_coin_brick.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
