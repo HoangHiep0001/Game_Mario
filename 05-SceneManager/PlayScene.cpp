@@ -14,6 +14,7 @@
 #include "Pipe.h"
 #include "Koopa.h"
 #include "Goomba.h"
+#include "MagicCoinBrick.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -134,7 +135,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::GREEN_PARAKOOPA:
 		obj = new CKoopa(x, y, object_type, (CMario*)player); break;
 
-	//case Type::COIN: obj = new CCoin(x, y); break;
+	case Type::COIN:
+	case Type::BRONZE_BRICK:
+		obj = new CMagicCoinBrick(x, y, object_type); break;
 
 	case Type::PANDORA_BRICK:
 	{

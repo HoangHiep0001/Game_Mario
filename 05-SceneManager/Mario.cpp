@@ -310,9 +310,9 @@ int CMario::GetAniIdRaccoon()
 		if (abs(ax) == MARIO_ACCEL_RUN_X) // COI SỬA LẠI CÁI NÀY
 		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
+				aniId = ID_ANI_MARIO_RACCOON_FLYING_UP_RIGHT;
 			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT;
+				aniId = ID_ANI_MARIO_RACCOON_FLYING_UP_LEFT;
 		}
 		else
 		{

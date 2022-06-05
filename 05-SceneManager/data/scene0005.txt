@@ -18,7 +18,8 @@ data\magic_coin_brick.txt
 
 # MARIO
 #0	500	50
-0	100	50
+#0	100	50
+0	2200	50
 
 # Goomba
 2	230	399
