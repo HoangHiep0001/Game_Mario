@@ -1,7 +1,6 @@
 # list of object assets to load in this scene
 [ASSETS]
 data\mario.txt
-data\coin.txt
 data\cloud.txt
 data\pandora_brick.txt
 data\bronze_brick.txt

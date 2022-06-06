@@ -2,6 +2,13 @@
 #include "GameObject.h"
 #include "Timer.h"
 
+#define TAIL_BBOX_WIDTH 10
+#define TAIL_BBOX_HEIGHT 6
+
+#define TAIL_OFFSET_Y 5
+#define TAIL_OFFSET_X_LEFT	9
+#define TAIL_OFFSET_X_RIGHT	11
+
 class CTail : public CGameObject
 {
 public:

@@ -20,6 +20,15 @@
 
 #define MAGIC_BRICK_STATE_BREAK 99
 
+#define PIECE_POS_X 5
+#define PIECE_TOP_POS_Y 6
+#define PIECE_BOT_POS_Y 4
+
+#define LEFT -1
+#define RIGHT 1
+#define HIGH 2
+#define LOW 1
+
 class CMagicCoinBrick : public CGameObject
 {
 	int blocking;

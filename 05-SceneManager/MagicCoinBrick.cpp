@@ -68,10 +68,10 @@ void CMagicCoinBrick::SetState(int state)
 {
 	if (state == MAGIC_BRICK_STATE_BREAK)
 	{
-		CBrokenPiece* topLeftPiece = new CBrokenPiece(x - 5, y - 6, -1, 2);
-		CBrokenPiece* topRightPiece = new CBrokenPiece(x + 5, y - 6, 1, 2);
-		CBrokenPiece* bottomLeftPiece = new CBrokenPiece(x - 5, y + 4, -1);
-		CBrokenPiece* bottomRightPiece = new CBrokenPiece(x + 5, y + 4, 1);
+		CBrokenPiece* topLeftPiece = new CBrokenPiece(x - PIECE_POS_X, y - PIECE_TOP_POS_Y, LEFT, HIGH);
+		CBrokenPiece* topRightPiece = new CBrokenPiece(x + PIECE_POS_X, y - PIECE_TOP_POS_Y, RIGHT, HIGH);
+		CBrokenPiece* bottomLeftPiece = new CBrokenPiece(x - PIECE_POS_X, y + PIECE_BOT_POS_Y, LEFT, LOW);
+		CBrokenPiece* bottomRightPiece = new CBrokenPiece(x + PIECE_POS_X, y + PIECE_BOT_POS_Y, RIGHT, LOW);
 
 		pieces = { topLeftPiece, topRightPiece, bottomLeftPiece, bottomRightPiece };
 		isBroken = true;
