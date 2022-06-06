@@ -63,7 +63,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (e->ny != 0 )
 	{
-		vy = 0;
+		if (state != GOOMBA_STATE_DIE_BY_ATTACK)
+			vy = 0;
+
+		if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (lostWings || type == Type::YELLOW_GOOMBA) return;
 
@@ -167,7 +170,7 @@ void CGoomba::SetState(int state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
 		walkTime->Stop();
-		vx = vx * nx;
+		vx = abs(vx) * nx;
 		vy = -GOOMBA_DIE_DEFLECT_SPEED_Y;
 		break;
 

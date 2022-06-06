@@ -46,6 +46,7 @@ public:
 	Type GetType() { return this->type; }
 	int GetState() { return this->state; }
 	int GetNx() { return this->nx; }
+	float GetPosX() { return this->x; }
 	virtual void Delete() { isDeleted = true;  }
 	bool IsDeleted() { return isDeleted; }
 	bool CheckAABB(float l_a, float t_a, float r_a, float b_a, float l_b, float t_b, float r_b, float b_b)

@@ -27,9 +27,6 @@
     <ClCompile Include="Animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AssetIDs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Coin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
@@ -212,9 +206,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\brick.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="data\bronze_brick.txt">
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="data\cloud.txt">

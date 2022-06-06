@@ -7,7 +7,6 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-#include "Coin.h"
 #include "Platform.h"
 #include "Ground.h"
 #include "PandoraBrick.h"
@@ -141,8 +140,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::PANDORA_BRICK:
 	{
-		float brickType = (float)atof(tokens[3].c_str());
-		float itemType = (float)atof(tokens[4].c_str());
+		int brickType = (float)atof(tokens[3].c_str());
+		int itemType = (float)atof(tokens[4].c_str());
 
 		obj = new CPandoraBrick(x, y, object_type, brickType, itemType);
 
@@ -151,7 +150,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::PIPE:
 	{
-		float pipeType = (float)atof(tokens[3].c_str());
+		int pipeType = (float)atof(tokens[3].c_str());
 		obj = new CPipe(x, y, object_type, pipeType);
 
 		break;
@@ -160,8 +159,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::COLOR_BOX:
 	case Type::GROUND:
 	{
-		float row_cell_num = (float)atof(tokens[3].c_str());
-		float column_cell_num = (float)atof(tokens[4].c_str());
+		int row_cell_num = (float)atof(tokens[3].c_str());
+		int column_cell_num = (float)atof(tokens[4].c_str());
 
 		obj = new CGround(x, y, object_type, row_cell_num, column_cell_num);
 
@@ -189,8 +188,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::PORTAL:
 	{
-		float r = (float)atof(tokens[3].c_str());
-		float b = (float)atof(tokens[4].c_str());
+		int r = (float)atof(tokens[3].c_str());
+		int b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}

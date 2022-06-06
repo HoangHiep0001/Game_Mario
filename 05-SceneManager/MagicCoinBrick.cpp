@@ -30,7 +30,7 @@ void CMagicCoinBrick::Render()
 	for (LPGAMEOBJECT piece : pieces)
 		piece->Render();
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CMagicCoinBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

@@ -26,7 +26,7 @@ class CPandoraBrick : public CGameObject {
 public:
 	int brickType;
 	int itemType;
-	int initialY;
+	float initialY;
 	float highestPos;
 
 	bool isBouncedUp;

@@ -6,7 +6,6 @@
 
 #include "Goomba.h"
 #include "Koopa.h"
-#include "Coin.h"
 #include "PandoraBrick.h"
 #include "Portal.h"
 
@@ -23,6 +22,13 @@ CMario* CMario::GetInstance()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (!powerMode->IsTimeUp() && !powerMode->IsStopped() && !isOnPlatform)
+		ay = 0.0003f;
+	else if (!wagTail->IsStopped() && !wagTail->IsTimeUp())
+		ay = 0.000035f;
+	else
+		ay = MARIO_GRAVITY;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -41,7 +47,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (spinTail->IsTimeUp())
 		spinTail->Stop();
 
+	if (wagTail->IsTimeUp())
+		wagTail->Stop();
+
+	if (powerMode->IsTimeUp())
+		powerMode->Stop();
+
 	isOnPlatform = false;
+
+	tail->Update(dt, coObjects);
 
 	dax = MARIO_DECEL_X * dt;
 
@@ -59,7 +73,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0)
+		{
+			wagTail->Stop();
+			isOnPlatform = true;
+		}
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
@@ -70,7 +88,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CKoopa*>(e->obj))
 		OnCollisionWithKoopa(e);
-	else if (dynamic_cast<CCoin*>(e->obj))
+	else if (e->obj->GetType() == Type::COIN)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPandoraBrick*>(e->obj))
 		OnCollisionWithPandoraBrick(e);
@@ -118,7 +136,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE_BY_CRUSH)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level > MARIO_LEVEL_BIG)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -181,7 +204,12 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			if (koopa->GetState() != KOOPA_STATE_SHELL)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level > MARIO_LEVEL_BIG)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -318,10 +346,24 @@ int CMario::GetAniIdRaccoon()
 		{
 			if (isSitting)
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_SIT_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_SIT_LEFT;
+			}
+			else if (!(powerMode->IsTimeUp() || powerMode->IsStopped()))
+			{
+				if (nx > 0)
+					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_LEFT;
+			}
+			else if (!(wagTail->IsTimeUp() || wagTail->IsStopped()))
+			{
+				if (nx > 0)
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_LEFT;
 			}
 			else if (isHoldingShell)
 			{
@@ -332,14 +374,14 @@ int CMario::GetAniIdRaccoon()
 			}
 			else if (vy > 0)
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_FALLING_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_FALLING_LEFT;
 			}
 			else // vy < 0
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
@@ -648,6 +690,8 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
+	tail->Render();
+
 	RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
@@ -732,7 +776,10 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_ATTACK:
 		if (spinTail->IsStopped())
+		{
 			spinTail->Start();
+			tail->Attack();
+		}
 		break;
 	}
 

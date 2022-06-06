@@ -147,7 +147,6 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BrokenPiece.cpp" />
-    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DetectionBox.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="BrokenPiece.h" />
-    <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="DetectionBox.h" />
@@ -212,7 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\brick.txt" />
-    <Text Include="data\bronze_brick.txt" />
     <Text Include="data\cloud.txt" />
     <Text Include="data\coin.txt" />
     <Text Include="data\goomba.txt" />
