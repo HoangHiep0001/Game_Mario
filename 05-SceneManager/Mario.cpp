@@ -250,12 +250,19 @@ int CMario::GetAniIdSmall()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (abs(vx) == MARIO_MAX_RUNNING_SPEED)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
 			else
 				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT;
+		}
+		else if (isHoldingShell)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_SHELL_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SMALL_JUMP_HOLD_SHELL_LEFT;
 		}
 		else
 		{
@@ -335,7 +342,7 @@ int CMario::GetAniIdRaccoon()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X) // COI SỬA LẠI CÁI NÀY
+		if (abs(vx) == MARIO_MAX_RUNNING_SPEED)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_RACCOON_FLYING_UP_RIGHT;
@@ -463,7 +470,7 @@ int CMario::GetAniIdFire()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (abs(vx) == MARIO_MAX_RUNNING_SPEED)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_FIRE_JUMP_RUN_RIGHT;
@@ -568,7 +575,7 @@ int CMario::GetAniIdBig()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (abs(vx) == MARIO_MAX_RUNNING_SPEED)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;

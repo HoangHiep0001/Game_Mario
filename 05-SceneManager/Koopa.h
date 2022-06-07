@@ -13,8 +13,7 @@
 #define KOOPA_SHELL_TIME 8000
 #define KOOPA_VIBRATION_TIME 3000
 
-#define KOOPA_STATE_WALKING 100
-#define KOOPA_STATE_DIE 200
+#define KOOPA_STATE_DIE 199
 
 
 #pragma region KOOPA_BBOX_SIZE
@@ -87,6 +86,7 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithMagicCoinBrick(LPCOLLISIONEVENT e);
 
 public:
 	CKoopa(float x, float y, Type type, CMario* player);

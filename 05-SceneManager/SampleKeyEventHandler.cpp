@@ -56,7 +56,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
-	case DIK_A:
+	case DIK_D:
 		if (mario->isHoldingShell)
 			mario->isHoldingShell = false;
 		break;
