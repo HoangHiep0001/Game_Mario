@@ -17,8 +17,8 @@ data\magic_coin_brick.txt
 
 # MARIO
 #0	500	50
-0	100	50
-#0	2200	50
+#0	100	50
+0	2200	50
 
 # Goomba
 2	230	399
@@ -34,7 +34,7 @@ data\magic_coin_brick.txt
 21	1336	304
 21	1384	304
 21	1432	304
-#19	2107	351
+19	2107	351
 
 # Pandora Brick
 1	184	360	1	1
