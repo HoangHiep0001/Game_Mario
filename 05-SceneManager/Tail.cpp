@@ -4,6 +4,7 @@
 #include "Goomba.h"
 #include "MagicCoinBrick.h"
 #include "PandoraBrick.h"
+#include "EffectTail.h"
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -51,6 +52,14 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		attackIsOn = false;
 	}
 
+	for (int i = 0; i < effects.size(); i++)
+	{
+		effects[i]->Update(dt, coObjects);
+
+		if (effects[i]->IsDeleted())
+			effects.erase(effects.begin() + i);
+	}
+
 	float ml, mt, mr, mb, sl, st, sr, sb; // main object (m) and scene objects (b)
 	GetBoundingBox(ml, mt, mr, mb);
 
@@ -74,7 +83,15 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CTail::Render()
 {
+	for (LPGAMEOBJECT effect : effects)
+		effect->Render();
 	RenderBoundingBox();
+}
+
+void CTail::Effect()
+{
+	CEffectTail* effect = new CEffectTail(x, y);
+	effects.push_back(effect);
 }
 
 void CTail::Attack()
@@ -96,6 +113,8 @@ void CTail::OnCollisionWithGoomba(LPGAMEOBJECT e)
 	else
 		e->SetNx(TAIL_SETNX);
 
+	Effect();
+
 	e->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
 }
 
@@ -106,6 +125,8 @@ void CTail::OnCollisionWithKoopa(LPGAMEOBJECT e)
 	else
 		e->SetNx(TAIL_SETNX);
 	
+	Effect();
+
 	e->SetState(KOOPA_STATE_SHELL_BY_ATTACK);
 }
 

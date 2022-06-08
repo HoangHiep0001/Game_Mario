@@ -384,10 +384,22 @@ void CPlayScene::PurgeDeletedObjects()
 			*it = NULL;
 		}
 	}
+	for (it = magicCoinBricks.begin(); it != magicCoinBricks.end(); it++)
+	{
+		LPGAMEOBJECT o = *it;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it = NULL;
+		}
+	}
 
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
+	magicCoinBricks.erase(
+		std::remove_if(magicCoinBricks.begin(), magicCoinBricks.end(), CPlayScene::IsGameObjectDeleted),
+		magicCoinBricks.end());
 }

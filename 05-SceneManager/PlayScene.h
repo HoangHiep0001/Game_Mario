@@ -18,6 +18,7 @@ protected:
 	CHud* HUD;
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> magicCoinBricks;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);

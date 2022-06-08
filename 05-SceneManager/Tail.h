@@ -17,6 +17,8 @@ public:
 	BOOLEAN attackIsOn;
 	CTimer* attackTime;
 
+	vector<LPGAMEOBJECT> effects;
+
 	CTail(CTimer* attackTime)
 	{
 		attackIsOn = false;
@@ -25,6 +27,7 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	void Effect();
 	void Attack();
 	void OnCollisionWithGoomba(LPGAMEOBJECT e);
 	void OnCollisionWithKoopa(LPGAMEOBJECT e);
