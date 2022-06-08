@@ -12,6 +12,13 @@
 #define ID_ANI_POWER_START_TIER_6	926
 #define ID_ANI_POWER_START_TIER_7	927
 
+#define SPEED_X_TIER_1	0.115f
+#define SPEED_X_TIER_2	0.130f
+#define SPEED_X_TIER_3	0.145f
+#define SPEED_X_TIER_4	0.160f
+#define SPEED_X_TIER_5	0.175f
+#define SPEED_X_TIER_6	0.190f
+#define SPEED_X_TIER_7	0.200f
 
 #define HUD_POS_X			126
 #define HUD_POS_Y			55

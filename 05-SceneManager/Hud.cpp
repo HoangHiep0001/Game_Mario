@@ -12,8 +12,25 @@ void CHud::Render()
 	float playerSpeedX = abs(CMario::GetInstance()->GetSpeedX());
 
 	int powerMeterAniId = -1;
-	powerMeterAniId = ID_ANI_POWER_START_TIER_0;
-
+	
+	if (CMario::GetInstance()->IsOnPowerMode())
+		powerMeterAniId = ID_ANI_POWER_START_TIER_0;
+	else if (playerSpeedX < SPEED_X_TIER_1)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_0;
+	else if (playerSpeedX < SPEED_X_TIER_2)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_1;
+	else if (playerSpeedX < SPEED_X_TIER_3)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_2;
+	else if (playerSpeedX < SPEED_X_TIER_4)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_3;
+	else if (playerSpeedX < SPEED_X_TIER_5)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_4;
+	else if (playerSpeedX < SPEED_X_TIER_6)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_5;
+	else if (playerSpeedX < SPEED_X_TIER_7)
+		powerMeterAniId = ID_ANI_POWER_START_TIER_6;
+	else
+		powerMeterAniId = ID_ANI_POWER_START_TIER_7;
 
 	CSprites::GetInstance()->Get(ID_SPRITE_BLACK_BG)->Draw(camX + 136, hudPosY - BLACK_BG_POS_Y + 2);
 	CSprites::GetInstance()->Get(ID_SPRITE_HUD_BAR)->Draw(hudPosX, hudPosY);
