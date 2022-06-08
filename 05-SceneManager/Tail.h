@@ -9,6 +9,8 @@
 #define TAIL_OFFSET_X_LEFT	9
 #define TAIL_OFFSET_X_RIGHT	11
 
+#define TAIL_SETNX 1
+
 class CTail : public CGameObject
 {
 public:

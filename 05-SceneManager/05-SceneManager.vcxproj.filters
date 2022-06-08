@@ -102,6 +102,9 @@
     <ClCompile Include="MagicCoinBrick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Hud.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -203,6 +206,9 @@
     <ClInclude Include="MagicCoinBrick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\brick.txt">
@@ -248,6 +254,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="data\magic_coin_brick.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\HUD.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

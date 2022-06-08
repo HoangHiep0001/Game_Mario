@@ -9,6 +9,7 @@ data\koopa.txt
 data\items.txt
 data\pipe.txt
 data\magic_coin_brick.txt
+data\HUD.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type

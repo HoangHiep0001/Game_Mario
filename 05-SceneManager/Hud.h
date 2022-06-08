@@ -1,0 +1,29 @@
+#pragma once
+
+#define ID_SPRITE_HUD_BAR	1009
+#define ID_SPRITE_BLACK_BG	11111
+
+#define ID_ANI_POWER_START_TIER_0	920
+#define ID_ANI_POWER_START_TIER_1	921
+#define ID_ANI_POWER_START_TIER_2	922
+#define ID_ANI_POWER_START_TIER_3	923
+#define ID_ANI_POWER_START_TIER_4	924
+#define ID_ANI_POWER_START_TIER_5	925
+#define ID_ANI_POWER_START_TIER_6	926
+#define ID_ANI_POWER_START_TIER_7	927
+
+
+#define HUD_POS_X			126
+#define HUD_POS_Y			55
+#define BLACK_BG_POS_Y		1
+#define	POWER_START_POS_X	32
+#define	POWER_START_POS_Y	3
+
+class CHud
+{
+public:
+	CHud() {}
+	void Render();
+};
+
+

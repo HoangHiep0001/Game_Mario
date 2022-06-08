@@ -320,7 +320,7 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
+	//cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
 	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
@@ -336,6 +336,8 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+
+	HUD->Render();
 }
 
 /*

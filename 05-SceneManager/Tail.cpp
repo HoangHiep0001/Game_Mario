@@ -92,15 +92,21 @@ void CTail::Attack()
 void CTail::OnCollisionWithGoomba(LPGAMEOBJECT e)
 {
 	if (CMario::GetInstance()->GetPosX() > e->GetPosX())
-		e->SetNx(-1);
+		e->SetNx(-TAIL_SETNX);
 	else
-		e->SetNx(1);
+		e->SetNx(TAIL_SETNX);
 
 	e->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
 }
 
 void CTail::OnCollisionWithKoopa(LPGAMEOBJECT e)
 {
+	if (CMario::GetInstance()->GetPosX() > e->GetPosX())
+		e->SetNx(TAIL_SETNX);
+	else
+		e->SetNx(TAIL_SETNX);
+	
+	e->SetState(KOOPA_STATE_SHELL_BY_ATTACK);
 }
 
 void CTail::OnCollisionWithPandoraBrick(LPGAMEOBJECT e)

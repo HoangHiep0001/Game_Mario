@@ -19,3 +19,6 @@ height	240
 20	textures\misc.png
 21	textures\misc-2.png
 33	textures\effect.png
+55	textures\status_hud.png
+56	textures\power_start.png
+100	textures\black-background.png

@@ -57,10 +57,10 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (player->nx > 0)
 		{
-			x += 6;
+			x += KOOPA_HOLDING_SHELL;
 		}
 		else
-			x -= 6;
+			x -= KOOPA_HOLDING_SHELL;
 		player->kickShell->Start();
 		SetNx(player->nx);
 		SetState(KOOPA_STATE_SHELL_MOVING);
@@ -70,8 +70,6 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (int i = 0; i < subItems.size(); i++)
 			subItems[i]->Update(dt, coObjects);
 
-
-	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 

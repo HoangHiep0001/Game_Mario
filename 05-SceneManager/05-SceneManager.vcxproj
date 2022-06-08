@@ -154,6 +154,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="MagicCoinBrick.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Hud.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="MagicCoinBrick.h" />
@@ -213,6 +215,7 @@
     <Text Include="data\cloud.txt" />
     <Text Include="data\coin.txt" />
     <Text Include="data\goomba.txt" />
+    <Text Include="data\HUD.txt" />
     <Text Include="data\items.txt" />
     <Text Include="data\koopa.txt" />
     <Text Include="data\magic_coin_brick.txt" />
