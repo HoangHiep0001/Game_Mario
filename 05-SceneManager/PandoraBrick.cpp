@@ -1,6 +1,7 @@
 #include "PandoraBrick.h"
 #include "Mario.h"
 #include "Mushroom.h"
+#include "EffectCoin.h"
 
 void CPandoraBrick::Render()
 {
@@ -20,6 +21,9 @@ void CPandoraBrick::Render()
 		else
 			animations->Get(ID_ANI_BRONZE_BRICK)->Render(x, y);
 	}
+
+	for (int i = 0; i < frontItems.size(); i++)
+		frontItems[i]->Render();
 
 	RenderBoundingBox();
 }
@@ -48,6 +52,12 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				items.push_back(mushroom);
 			}
 			break;
+		case ITEM_TYPE_COIN:
+		{
+			CEffectCoin* coin = new CEffectCoin(x, y - PANDORA_BRICK_BBOX_HEIGHT + 1, Type::EFFECT_COIN);
+			frontItems.push_back(coin);
+			break;
+		}
 		default:
 			break;
 		}
@@ -59,6 +69,13 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (items[i]->IsDeleted())
 			items.erase(items.begin() + i);
+	}
+	for (int i = 0; i < frontItems.size(); i++)
+	{
+		frontItems[i]->Update(dt, coObjects);
+
+		if (frontItems[i]->IsDeleted())
+			frontItems.erase(frontItems.begin() + i);
 	}
 
 	CGameObject::Update(dt, coObjects);

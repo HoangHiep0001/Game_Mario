@@ -18,7 +18,7 @@
 #define ID_ANI_BRONZE_BRICK	612
 
 #define ITEM_TYPE_RANDOM			0
-#define ITEM_TYPE_COIN				2
+#define ITEM_TYPE_COIN				1
 #define ITEM_TYPE_GREEN_MUSHROOM	3
 #define ITEM_TYPE_P_SWITCH			4
 
@@ -34,6 +34,7 @@ public:
 	//bool isReadyToDropItem = false;
 
 	vector<LPGAMEOBJECT> items;
+	vector<LPGAMEOBJECT> frontItems;
 
 	CPandoraBrick(float x, float y, Type type, int brickType, int itemType) : CGameObject(x, y, type)
 	{

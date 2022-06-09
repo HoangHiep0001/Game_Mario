@@ -306,6 +306,16 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+	{
+		coObjects.push_back(magicCoinBricks[i]);
+	}
+
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+	{
+		magicCoinBricks[i]->Update(dt, &coObjects);
+	}
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
@@ -333,6 +343,9 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	map->Render();
+
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+		magicCoinBricks[i]->Render();
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
