@@ -2,7 +2,7 @@
 
 void CEffectCoin::Update(DWORD dt, vector<LPGAMEOBJECT>*coObjects)
 {
-	y += vx * dt;
+	y += vy * dt;
 
 	if (y < highest)
 		vy = -vy;

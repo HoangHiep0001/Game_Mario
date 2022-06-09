@@ -1,7 +1,8 @@
-#include "PandoraBrick.h"
+﻿#include "PandoraBrick.h"
 #include "Mario.h"
 #include "Mushroom.h"
 #include "EffectCoin.h"
+#include "Leaf.h"
 
 void CPandoraBrick::Render()
 {
@@ -51,6 +52,11 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CMushroom* mushroom = new CMushroom(x, y, Type::SUPER_MUSHROOM);
 				items.push_back(mushroom);
 			}
+			else
+			{
+				CLeaf* leaf = new CLeaf(x, y, Type::SUPER_LEAF);
+				frontItems.push_back(leaf);
+			}
 			break;
 		case ITEM_TYPE_COIN:
 		{
@@ -75,7 +81,9 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		frontItems[i]->Update(dt, coObjects);
 
 		if (frontItems[i]->IsDeleted())
+		{
 			frontItems.erase(frontItems.begin() + i);
+		}
 	}
 
 	CGameObject::Update(dt, coObjects);
